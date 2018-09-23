@@ -126,7 +126,7 @@ const submitNew = (req, res, next) => {
       } else {
       db.query(sql, [artist_id])
           .then((item) => {
-            return res.json({successful: true, data: item[0]});
+            return res.json({ statusCode: 300, data: { results: item }});
         });
       }
     });

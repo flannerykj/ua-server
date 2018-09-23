@@ -7,7 +7,7 @@ let express = require('express'),
   session = require('express-session'),
   auth = require('./controllers/auth'),
   posts = require('./controllers/posts'),
-  newPosts = require('./controllers/newPosts'),
+  images = require('./controllers/images'),
   comments = require('./controllers/comments'),
   artists = require('./controllers/artists'),
   users = require('./controllers/users'),
@@ -79,11 +79,11 @@ app.post('/api/login', auth.login);
 app.get('/api/posts', posts.findAll);
 app.get('/api/posts/:id', posts.findById);
 app.post('/api/posts/:id/applaud', posts.applaudPost);
-app.post('/api/posts', [jwtauth], newPosts.submitNew);
+app.post('/api/posts', [jwtauth], posts.submitNew);
 app.delete('/api/posts/:id', [jwtauth], posts.deletePost);
 
-app.post("/api/upload", newPosts.uploadFiles);
-app.use("/api/uploads",  express.static(path.join(__dirname, './uploads')));
+app.post("/api/upload", images.uploadFiles);
+app.get("/api/uploads/:filename",  images.getFile);
 
 app.get('/api/comments/:post_id', comments.findByPostId);
 app.post('/api/comments', [jwtauth], comments.submitNew);

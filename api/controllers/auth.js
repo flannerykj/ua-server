@@ -18,7 +18,7 @@ let login = (req, res, next) => {
     console.log('is empty');
     return res.json({statusCode: 422, message: JSON.stringify(error.array()) })
   } else {
-  let sql = "SELECT id, email, hash_pass, bio, date_created from users where email = '" + email + "';";
+  let sql = "SELECT id, email, username, hash_pass, bio, date_created from users where email = '" + email + "';";
     db.query(sql)
       .then((result) => {
         if (result.length ==0) {

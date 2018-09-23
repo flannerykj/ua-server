@@ -20,7 +20,7 @@ let express = require('express'),
   sanitize = require("sanitize-filename"),
   app = express();
 
-app.set('port', 4000);
+app.set('port', 8080);
 
 app.use(bodyParser.urlencoded({ extended: true, limit: 52428800}));
 app.use(bodyParser.json({limit: '50MB'}));

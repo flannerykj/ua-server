@@ -1,5 +1,15 @@
+const { Client } = require('pg')
+
+const client = new Client({
+  user: 'flannerykj',
+  host: 'localhost',
+  database: 'ua_development',
+  password: 'cheesecake',
+  port: 5432
+})
+
+client.connect()
+
 module.exports = {
-
-    databaseURL: process.env.DATABASE_URL || 'postgresql://flannerykj:cheesecake@localhost:5432/urbanapplause'
-
+  client
 };

@@ -1,0 +1,29 @@
+version: '2'
+services:
+  api:
+    container_name: dev-server
+    build: ./api
+    volumes:
+      - ./api/:/usr/app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    tty: true
+    stdin_open: true
+    environment:
+      DATABASE_URL: postgres://flannerykj@postgres/ua_development
+    links:
+      - postgres:postgres
+    environment:
+      - NODE_ENV=development
+  postgres:
+    container_name: dev-db
+    build: ./database
+    tty: true
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: flannerykj
+      POSTGRES_PASSWORD: cheesecake
+      POSTGRES_DB: ua_development

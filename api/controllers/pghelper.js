@@ -13,10 +13,10 @@ const productionConfigs = {
 }
 
 const devConfigs = {
-  url: 'postgresql://postgres:cheesecake@localhost:5432/urbanapplause',
-  user: 'postgres',
-  host: 'localhost',
-  database: 'urbanapplause',
+  url: 'postgres://flannerykj:cheesecake@postgres:5432/ua_development',
+  user: 'flannerykj',
+  host: 'postgres',
+  database: 'ua_development',
   password: 'cheesecake',
   port: 5432,
   logUnclosedConnections: true,
@@ -29,7 +29,7 @@ const devConfigs = {
 
 
 exports.query = function (sql, values, singleItem, dontLog) {
-
+  console.log(process.env.NODE_ENV);
   const pool = new Pool(process.env.NODE_ENV=="development" ? devConfigs : productionConfigs);
   if (!dontLog) {
     //console.log(sql, values);

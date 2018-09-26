@@ -1,10 +1,10 @@
 version: '2.3'
 services:
   api:
-    container_name: dev-server
+    container_name: ua-server
     build: ./api
     volumes:
-      - uploads_volume:/usr/app/uploads/
+      - ./api/uploads/:/usr/app/uploads/
     ports:
       - "8080:8080"
     depends_on:
@@ -18,7 +18,7 @@ services:
     environment:
       - NODE_ENV=development
   postgres:
-    container_name: dev-db
+    container_name: ua-db
     build: ./database
     tty: true
     ports:
@@ -27,6 +27,3 @@ services:
       POSTGRES_USER: flannerykj
       POSTGRES_PASSWORD: cheesecake
       POSTGRES_DB: ua_development
-
-volumes:
-  uploads_volume:

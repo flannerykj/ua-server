@@ -109,24 +109,26 @@ const submitNew = (req, res, next) => {
   let photo_date = moment().unix(req.body.photo_date);
   console.log(photo_date);
 
-  let locationSql = "INSERT INTO locations (lng, lat, formatted_address, city, google_place_id) VALUES (" + lng + ", " + lat + ", $$" + formatted_address + "$$, $$" + city + "$$, '" + place_id + "') RETURNING id;";
+  let locationSql = "INSERT INTO locations (lng, lat, formatted_address, city, google_place_id) VALUES (" + lng + ", " + lat + ", $$" + formatted_address + "$$, $$" + city + "$$, '" + place_id + "') RETURNING *;";
 
   db.query(locationSql)
-    .then((id) => {
-      var sql = "INSERT INTO posts (id, description, artist_id, image,  date_posted, location_id, user_id) VALUES (DEFAULT, $$" + description + "$$, $1,  $$" + image + "$$, DEFAULT, " + id[0].id + ", '" + user_id + "') RETURNING posts.id;";
+    .then((locations) => {
+      var sql = "INSERT INTO posts (id, description, artist_id, image,  date_posted, location_id, user_id) VALUES (DEFAULT, $$" + description + "$$, $1,  $$" + image + "$$, DEFAULT, " + locations[0].id + ", '" + user_id + "') RETURNING *";
+      console.log(locations[0]);
       console.log(sql);
       if(newArtistSql) {
         db.query(newArtistSql)
-          .then((item) => {
-            db.query(sql, [item[0].id])
-              .then((item) => {
-              return res.json({successful: true, data: item[0]});
+          .then((artists) => {
+            db.query(sql, [artists[0].id])
+              .then((posts) => {
+              return res.json({statusCode: 300, data: { results: Object.assign({}, posts[0], {formatted_address: locations[0].formatted_address, username: req.body.username, artist: req.body.artist }) }});
             });
           });
       } else {
       db.query(sql, [artist_id])
-          .then((item) => {
-            return res.json({ statusCode: 300, data: { results: item }});
+          .then((posts) => {
+            console.log(posts);
+            return res.json({ statusCode: 300, data: { results: Object.assign({}, posts[0], {formatted_address: locations[0].formatted_address, username: req.body.username, artist: req.body.artist }) }});
         });
       }
     });

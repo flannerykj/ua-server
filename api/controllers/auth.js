@@ -71,7 +71,6 @@ let register = (req, res, next) => {
   var error = validationResult(req);
 
   if(!error.isEmpty()) {
-    console.log('empty');
     return res.status(422).json({ message: error.array() })
   } else {
     var salt = bcrypt.genSaltSync(10);

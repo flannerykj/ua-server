@@ -29,7 +29,7 @@ let findAll = (req, res, next) => {
   let where = whereParts.length > 0 ? ("WHERE " + whereParts.join(" AND ")) : "";
   console.log(whereParts);
   let countSql = "SELECT COUNT(*) FROM (((posts INNER JOIN artists ON posts.artist_id = artists.id) INNER JOIN locations ON posts.location_id = locations.id) INNER JOIN users ON posts.user_id = users.id) " + where;
-  let sql = "SELECT posts.id, posts.image, date_posted, description, artist_id, artists.name as artist, locations.city as city, locations.formatted_address as formatted_address, locations.lng as lng, locations.lat as lat, user_id, users.username as username, applauseCount " +
+  let sql = "SELECT posts.id, posts.image, date_posted, description, artist_id, artists.name as artist_name, locations.city as city, locations.formatted_address as formatted_address, locations.lng as lng, locations.lat as lat, user_id, users.username as username, applauseCount " +
     "FROM ((((posts INNER JOIN artists ON posts.artist_id = artists.id) INNER JOIN locations ON posts.location_id = locations.id) INNER JOIN users ON posts.user_id = users.id) LEFT OUTER JOIN (SELECT post_id, count(*) as applauseCount FROM applause as a1 GROUP BY a1.post_id) subquery ON posts.id = subquery.post_id) " + where +
     " ORDER BY posts.date_posted DESC LIMIT $" + (values.length + 1) + " OFFSET $" +  + (values.length + 2);
 
@@ -50,7 +50,7 @@ let findAll = (req, res, next) => {
 
 let findById = (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT posts.id, posts.image, date_posted, description, artist_id, artists.name as artist, locations.city as city, locations.formatted_address as formatted_address, locations.lng as lng, locations.lat as lat, user_id, users.username as username " +
+  let sql = "SELECT posts.id, posts.image, date_posted, description, artist_id, artists.name as artist_name, locations.city as city, locations.formatted_address as formatted_address, locations.lng as lng, locations.lat as lat, user_id, users.username as username " +
     "FROM (((posts INNER JOIN artists ON posts.artist_id = artists.id) INNER JOIN locations ON posts.location_id = locations.id) INNER JOIN users ON posts.user_id = users.id) " +
     "WHERE posts.id = $1";
 
@@ -87,7 +87,7 @@ let applaudPost = (req, res, next) => {
 
 const submitNew = (req, res, next) => {
   console.log('body: ', req.body);
-  var artist_id = req.body.artistId||null;
+  var artist_id = req.body.artist_id||null;
   const new_artist_name = req.body.new_artist_name;
   if (artist_id==null||'null') {
     if(new_artist_name) {
@@ -99,7 +99,7 @@ const submitNew = (req, res, next) => {
   }
   let image = req.body.image;
   let description = req.body.description;
-  let user_id = req.body.userId;
+  let user_id = req.body.user_id;
   let place = req.body.place;
   let lng = place ? place.geometry.location.lng : 43.6;
   let lat = place ? place.geometry.location.lat : -79.3;

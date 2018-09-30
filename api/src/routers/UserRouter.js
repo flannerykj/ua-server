@@ -1,12 +1,75 @@
 const express = require('express');
 const authController = require('../controllers/auth');
+const postController = require('../controllers/posts');
+const artistController = require('../controllers/artists');
+const photoController = require('../controllers/images');
+
 const { access } = require('../utilities/restrict');
 const { RESOURCES, ACTIONS } = require('../Roles');
 
 const router = express.Router({ mergeParams: true });
 
 router.route('/register')
-  .post(access(), authController.register);
+  .post(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    authController.register
+  );
+
+router.route('/login')
+  .post(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    authController.login
+  );
+
+router.route('/posts')
+  .get(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    postController.findAll
+  )
+  .post(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    postController.submitNew
+  );
+router.route('/posts/:id')
+  .get(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    postController.findById
+  )
+  .delete(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    postController.deletePost
+  );
+
+router.route('/uploads')
+  .post(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    photoController.uploadFiles
+  );
+
+router.route('/uploads/:filename')
+  .get(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    photoController.getFile
+  );
+
+router.route('/artists')
+  .get(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    postController.findAll
+  )
+  .post(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    postController.submitNew
+  );
+router.route('/artists/:id')
+  .get(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    artistController.findById
+  )
+  .put(
+    access(ACTIONS.UPDATE_OWN, RESOURCES.USER),
+    artistController.updateById
+  );
 
 module.exports = router;
 
